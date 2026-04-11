@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>碩一專案 - 智慧廚房管理系統</title>
+    <style>
+        :root { --primary: #4A6741; --accent: #D87D4A; --bg: #F4F1EA; --white: #FFFFFF; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 600px; margin: auto; }
+        .card { background: var(--white); padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e0e0e0; }
+        h2, h3 { color: var(--primary); text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; color: white; background: var(--primary); font-weight: bold; font-size: 16px; transition: 0.3s; }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        .secondary-btn { background: var(--accent); margin-top: 10px; }
+        .recommend-btn { background: #5D9CEC; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
+        th, td { border-bottom: 1px solid #eee; padding: 12px; text-align: left; }
+        th { background: #f8f9fa; color: #666; font-size: 14px; }
+        .del-btn { background: #FF6B6B; width: auto; padding: 5px 10px; font-size: 12px; margin: 0; }
+        .hidden { display: none; }
+        .user-info { text-align: right; font-size: 14px; color: #666; margin-bottom: 10px; }
+        #recommend-res { background: #eef9f1; padding: 15px; border-radius: 8px; border-left: 5px solid var(--primary); margin-top: 10px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🍳 智慧廚房助手</h2>
+
+    <div id="auth-section" class="card">
+        <div id="login-form">
+            <h3>🔐 帳號登入</h3>
+            <input type="text" id="login-user" placeholder="請輸入帳號">
+            <input type="password" id="login-pass" placeholder="請輸入密碼">
+            <button onclick="doLogin()">登入系統</button>
+            <p onclick="toggleAuth(true)" style="text-align:center; cursor:pointer; color:#666; font-size:14px; margin-top:15px;">尚未註冊？點此建立帳號</p>
+        </div>
+
+        <div id="reg-form" class="hidden">
+            <h3>📝 新用戶註冊</h3>
+            <input type="text" id="reg-user" placeholder="設定新帳號">
+            <input type="password" id="reg-pass" placeholder="設定新密碼">
+            <button class="secondary-btn" onclick="doRegister()">確認註冊</button>
+            <p onclick="toggleAuth(false)" style="text-align:center; cursor:pointer; color:#666; font-size:14px; margin-top:15px;">已有帳號？返回登入</p>
+        </div>
+    </div>
+
+    <div id="main-section" class="hidden">
+        <div class="user-info">
+            目前登入：<strong id="user-display"></strong> | 
+            <span onclick="location.reload()" style="cursor:pointer; color:var(--accent);">登出</span>
+        </div>
+
+        <div class="card">
+            <h3>💡 冰箱剩食推薦</h3>
+            <button class="recommend-btn" onclick="getRecommend()">根據現有食材推薦食譜</button>
+            <div id="recommend-res" class="hidden">
+                <div id="recommend-list"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🥦 我的冰箱清單</h3>
+            <div id="fridge-res">載入中...</div>
+            
+            <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
+            
+            <h4>➕ 存入新食材</h4>
+            <input type="text" id="ingName" placeholder="食材名稱 (需符合資料庫名稱)">
+            <input type="number" id="ingQty" placeholder="數量 (單位: 克/個)">
+            <button class="secondary-btn" onclick="addFridge()">存入冰箱</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API = 'http://localhost:8080/api';
+    let currentUserId = null;
+
+    function toggleAuth(showReg) {
+        document.getElementById('login-form').classList.toggle('hidden', showReg);
+        document.getElementById('reg-form').classList.toggle('hidden', !showReg);
+    }
+
+    // --- 驗證邏輯 ---
+    function doLogin() {
+        const payload = { 
+            username: document.getElementById('login-user').value, 
+            password: document.getElementById('login-pass').value 
+        };
+        fetch(`${API}/login`, { 
+            method: 'POST', 
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify(payload) 
+        })
+        .then(r => r.json()).then(d => {
+            if(d.success) {
+                currentUserId = d.userId;
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('main-section').classList.remove('hidden');
+                document.getElementById('user-display').innerText = document.getElementById('login-user').value;
+                getFridge();
+            } else alert(d.message);
+        }).catch(e => alert("伺服器連線失敗，請檢查後端是否啟動"));
+    }
+
+    function doRegister() {
+        const payload = { 
+            username: document.getElementById('reg-user').value, 
+            password: document.getElementById('reg-pass').value 
+        };
+        fetch(`${API}/register`, { 
+            method: 'POST', 
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify(payload) 
+        })
+        .then(r => r.json()).then(d => {
+            if(d.success) {
+                alert("註冊成功！請重新登入");
+                toggleAuth(false);
+            } else alert(d.message);
+        });
+    }
+
+    // --- 冰箱邏輯 ---
+    function getFridge() {
+        fetch(`${API}/fridge/${currentUserId}`).then(r => r.json()).then(data => {
+            if (data.length === 0) {
+                document.getElementById('fridge-res').innerHTML = "<p style='color:#999; text-align:center;'>冰箱空空的，快去買菜吧！</p>";
+                return;
+            }
+            let html = '<table><tr><th>食材名稱</th><th>數量</th><th>操作</th></tr>';
+            data.forEach(item => {
+                html += `<tr>
+                    <td>${item.ingredientName}</td>
+                    <td>${item.quantity}</td>
+                    <td><button class="del-btn" onclick="deleteItem('${item.ingredientId}')">刪除</button></td>
+                </tr>`;
+            });
+            document.getElementById('fridge-res').innerHTML = html + '</table>';
+        });
+    }
+
+    function addFridge() {
+        const name = document.getElementById('ingName').value;
+        const qty = document.getElementById('ingQty').value;
+        if(!name || !qty) return alert("請填寫完整資訊");
+
+        const p = { userId: currentUserId, ingredientName: name, quantity: qty };
+        fetch(`${API}/fridge`, { 
+            method: 'POST', 
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify(p) 
+        }).then(r => {
+            if(r.ok) {
+                getFridge();
+                document.getElementById('ingName').value = '';
+                document.getElementById('ingQty').value = '';
+            } else {
+                alert("存入失敗！請確認食材名稱是否與資料庫一致。");
+            }
+        });
+    }
+
+    function deleteItem(ingId) {
+        if(!confirm("確定要從冰箱移除這項食材嗎？")) return;
+        fetch(`${API}/fridge/${currentUserId}/${ingId}`, { method: 'DELETE' })
+            .then(() => getFridge());
+    }
+
+    // --- 智慧推薦邏輯 (連動 RecipeController) ---
+    function getRecommend() {
+        const resDiv = document.getElementById('recommend-res');
+        const listDiv = document.getElementById('recommend-list');
+        
+        fetch(`${API}/recipe/recommend/${currentUserId}`)
+            .then(r => r.json())
+            .then(data => {
+                resDiv.classList.remove('hidden');
+                if(data.length === 0) {
+                    listDiv.innerHTML = "❌ 目前冰箱的食材還做不出資料庫裡的食譜喔！";
+                } else {
+                    listDiv.innerHTML = "✨ <strong>推薦您可以嘗試：</strong><br>" + data.join("、");
+                }
+            });
+    }
+</script>
+</body>
+</html>

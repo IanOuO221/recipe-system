@@ -12,7 +12,7 @@
 - **精準推薦**：系統會根據食材重合度，動態計算並回傳用戶目前「最能立刻開煮」的食譜清單。
 
 ## 🛠️ 技術棧
-- **Language**: Java 25 (Self-taught migration from Python)
+- **Language**: Java 17
 - **Framework**: Spring Boot 4, Spring Data JPA
 - **Database**: PostgreSQL
 - **Frontend**: HTML5, CSS3, JavaScript (Fetch API)

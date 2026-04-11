@@ -17,5 +17,5 @@
 ## 📝 開發心得
 作為碩一資料庫課程的專案，我實作了從資料表設計（ERD）到 RESTful API 開發的全過程。特別是在處理食材比對的 SQL 邏輯時，學習到如何優化查詢效率，並透過前端 Fetch API 實現流暢的異步資料更新。
 ## 📸 系統功能介面
-![alt text](image.png)
-![alt text](image-1.png)
+![alt text](image-2.png)
+![alt text](image-3.png)

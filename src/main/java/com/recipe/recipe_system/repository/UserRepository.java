@@ -7,6 +7,5 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    // 解決 LoginController 紅字的宣告
     Optional<User> findByUsername(String username);
 }

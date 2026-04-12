@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Entity
 @Table(name = "users")
-@Data // 這個註解會自動產生 getPassword()
+@Data 
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,5 +16,5 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String password; // 這裡的名字必須是這個，不能是 pass 或 user_password
+    private String password; 
 }

@@ -24,7 +24,7 @@ public class UserFridge {
 @Embeddable
 public static class UserFridgeId implements Serializable {
     @Column(name = "user_id")
-    private Integer userId; // 確保這裡是 Integer
+    private Integer userId; 
     
     @Column(name = "食材編號")
     private String ingredientId;

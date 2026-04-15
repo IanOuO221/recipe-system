@@ -11,7 +11,6 @@
 
 ![alt text](image-4.png)
 
-本專案採用經典的 **MVC (Model-View-Controller)** 分層架構，並透過 **Spring Data JPA** 實作複雜的資料關聯，確保系統具備良好的擴充性。
 
 ### **1. 分層設計說明**
 * **用戶端與前端層 (Frontend Layer)**：

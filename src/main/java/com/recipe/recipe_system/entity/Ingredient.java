@@ -9,46 +9,46 @@ import lombok.Data;
 public class Ingredient {
     @Id
     @Column(name = "食材編號")
-    private String id; // VARCHAR(20) [cite: 45]
+    private String id; 
 
     @Column(name = "食品分類")
-    private String category; // [cite: 46]
+    private String category;
 
     @Column(name = "樣品名稱")
-    private String name; // [cite: 47]
+    private String name;
 
     @Column(name = "俗名")
-    private String commonName; // [cite: 48]
+    private String commonName;
 
     @Column(name = "熱量_kcal")
-    private Double calories; // FLOAT 
+    private Double calories;
 
     @Column(name = "水分_g")
-    private Double water; // [cite: 50]
+    private Double water;
 
     @Column(name = "粗蛋白_g")
-    private Double protein; // [cite: 51]
+    private Double protein;
 
     @Column(name = "粗脂肪_g")
-    private Double fat; // [cite: 52]
+    private Double fat;
 
     @Column(name = "飽和脂肪_g")
-    private Double saturatedFat; // [cite: 53]
+    private Double saturatedFat;
 
     @Column(name = "總碳水化合物_g")
-    private Double carbohydrates; // [cite: 54]
+    private Double carbohydrates;
 
     @Column(name = "膳食纖維_g")
-    private Double fiber; // [cite: 55]
+    private Double fiber;
 
     @Column(name = "糖質總量_g")
-    private Double sugars; // [cite: 56]
+    private Double sugars;
 
     @Column(name = "鈉_mg")
-    private Double sodium; // [cite: 57]
+    private Double sodium;
 
     @Column(name = "鉀_mg")
-    private Double potassium; // [cite: 58]
+    private Double potassium;
 
     @Column(name = "鈣_mg")
     private Double calcium;
@@ -63,5 +63,5 @@ public class Ingredient {
     private Double zinc;
 
     @Column(name = "磷_mg")
-    private Double phosphorus; // [cite: 61]
+    private Double phosphorus;
 }

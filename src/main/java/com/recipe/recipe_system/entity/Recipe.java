@@ -8,15 +8,16 @@ import lombok.Data;
 @Data
 public class Recipe {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recipe_id")
-    private String recipeId; // [cite: 65]
+    private Integer recipeId;
 
-    @Column(nullable = false, unique = true)
-    private String title; // [cite: 66]
+    @Column(name = "title")
+    private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "食材編號") 
     private String ingredients;
-    
-    @Column(columnDefinition = "TEXT")
-    private String steps; // [cite: 67]
+
+    @Column(name = "steps", columnDefinition = "TEXT")
+    private String steps;
 }

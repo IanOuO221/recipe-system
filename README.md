@@ -63,6 +63,6 @@
 ## 📸 系統介面預覽
 ![alt text](image-2.png)
 ![alt text](image.png)
-
+![alt text](demo_video.gif)
 ## 資料來源
 - **食藥署(Ingredient)**:https://consumer.fda.gov.tw/Food/TFND.aspx?nodeID=178
